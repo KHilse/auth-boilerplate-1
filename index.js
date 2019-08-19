@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const flash = require('connect-flash');
 const layouts = require('express-ejs-layouts');
+const moment = require('moment');
 const passport = require('./config/passportConfig');
 const session = require('express-session');
 
@@ -27,7 +28,8 @@ app.use(passport.session());
 // CUSTOM MIDDLEWARE: write data to locals for every page
 app.use((req, res, next) => {
 	res.locals.alerts = req.flash();
-	res.locals.currentUser = req.user;
+	res.locals.currentUser = req.user; // user is added to req by passport
+	res.locals.moment = moment;
 	next();
 })
 
