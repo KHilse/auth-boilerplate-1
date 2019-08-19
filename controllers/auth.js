@@ -1,11 +1,12 @@
 const db = require('../models');
 const router = require('express').Router();
+const passport = require('../config/passportConfig');
 
 router.get('/signup', (req, res) => {
     res.render('auth/signup');
 })
 
-router.post('/signup', (req, res) => {
+router.post('/signup', (req, res, next) => {
 	if (req.body.password !== req.body.passwordverify) {
 		req.flash("error", "The passwords don't match!");
 		res.redirect("/auth/signup");
@@ -19,7 +20,12 @@ router.post('/signup', (req, res) => {
 	    .spread((user, wasCreated) => {
 	    	if (wasCreated) {
 	    		// Legit new user
-	    		res.send("Successfully created user. TODO: autologin");
+	    		passport.authenticate("local", {
+					successRedirect: "/profile",
+					successFlash: "Login success",
+					failureRedirect: "/auth/login",
+					failureFlash: "This should never happen!"
+	    		})(req, res, next);
 	    	} else {
 	    		// Existing user was found, don't let them create a new account
 	    		// Make them log in instead
@@ -48,9 +54,12 @@ router.get('/login', (req, res) => {
     res.render('auth/login');
 })
 
-router.post('/login', (req, res) => {
-    res.send('Login Stub - ToDo: Log in, then redirect');
-})
+router.post('/login', passport.authenticate("local", {
+	successRedirect: "/profile",
+	successFlash: "Login success",
+	failureRedirect: "/auth/login",
+	failureFlash: "Login Failed, invalid email or password"
+}));
 
 router.get('/logout', (req, res) => {
     res.render('auth/logout');

@@ -75,8 +75,31 @@ h1 {
     padding: 20px;
 }
 
+.success-box {
+    background-color: lightgreen;
+    color: darkgreen;
+    font-family: sans-serif;
+    padding: 20px;
+}
+
 .container {
     margin: 0 15%;
     background-color: #EEE;
     height: 100%;
+}
+
+.profile {
+    width: 800px;
+}
+
+.left, .right {
+    padding: 10px;
+}
+
+.left img {
+    height: auto;
+
+}
+.left {
+ float: left;
 }

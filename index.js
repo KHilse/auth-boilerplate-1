@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const flash = require('connect-flash');
 const layouts = require('express-ejs-layouts');
+const passport = require('./config/passportConfig');
 const session = require('express-session');
 
 // Instantiate the express app
@@ -20,16 +21,19 @@ app.use(session( {
 
 }));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // CUSTOM MIDDLEWARE: write data to locals for every page
 app.use((req, res, next) => {
 	res.locals.alerts = req.flash();
-
+	res.locals.currentUser = req.user;
 	next();
 })
 
 // Controllers
 app.use('/auth', require('./controllers/auth'));
+app.use("/profile", require("./controllers/profile"));
 
 // Routes
 app.get('/', (req, res) => {
